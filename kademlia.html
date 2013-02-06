@@ -28,8 +28,8 @@ function node(x, y, c, t) {
   var g1 = svg_element("g");
   var c1 = svg_element("circle");
   c1.setAttribute("id", "noodi-" + x);
-  c1.setAttribute("cx", "100");
-  c1.setAttribute("cy", "100");
+  c1.setAttribute("cx", "0");
+  c1.setAttribute("cy", "0");
   c1.setAttribute("r", "30");
   c1.setAttribute("stroke", "#000");
   c1.setAttribute("stroke-width", "2");
@@ -37,11 +37,11 @@ function node(x, y, c, t) {
   g1.appendChild(c1);
   
   var t1 = svg_element("text");
-  var te = document.createTextNode("c"+t);
+  var te = document.createTextNode(t);
   t1.appendChild(te);
   t1.setAttribute("style", "text-anchor: middle;");
-  t1.setAttribute("dx", "100");
-  t1.setAttribute("dy", "100");
+  t1.setAttribute("dx", "0");
+  t1.setAttribute("dy", "5");
   g1.appendChild(t1);
   g1.setAttribute("transform", "translate("+x+","+y+")");
   return g1;
@@ -63,15 +63,16 @@ function node_locations(center, dist, nodes) {
   return locations;
 }
 
-function draw_nodes(svg, locations) {
+function draw_nodes(locations) {
+  var g1 = svg_element("g");
   for (var node_id in locations) {
     loc = locations[node_id];
     x = loc[0];
     y = loc[1];
     n = node(x, y, '#cde', node_id);
-    svg.appendChild(n);
+    g1.appendChild(n);
   }
-
+  return g1;
 }
 
 function random_id(id_length) {
@@ -93,17 +94,57 @@ function generate_nodes(id_length, amount) {
   return unique;
 }
 
+function line(c1, c2) {
+  var x1 = c1[0];
+  var y1 = c1[1];
+  var x2 = c2[0];
+  var y2 = c2[1];
+  var l1 = svg_element("line");
+  l1.setAttribute("x1", x1);
+  l1.setAttribute("y1", y1);
+  l1.setAttribute("x2", x2);
+  l1.setAttribute("y2", y2);
+  l1.setAttribute("y2", y2);
+  l1.setAttribute("stroke", "#000");
+  l1.setAttribute("stroke-width", "1");
+  return l1;
+}
+
+function fully(locations) {
+  var g1 = svg_element("g");
+  for (var i in locations) {
+    loc1 = locations[i];
+    for (var j in locations) {
+      loc2 = locations[j];
+      l1 = line(loc1, loc2)
+      g1.appendChild(l1);
+    }
+  }
+  return g1;
+}
+
+function get_picture(locations) {
+  var g1 = svg_element("g");
+  var lines = fully(locations);
+  var nodes = draw_nodes(locations);
+  g1.appendChild(lines);
+  g1.appendChild(nodes);
+  return g1;
+}
+
 window.onload = function() {
   var container = document.getElementById("svg_area");
   var mySvg = svg_element("svg");
   mySvg.setAttribute("version", "1.2");
   mySvg.setAttribute("baseProfile", "tiny");
   container.appendChild(mySvg);
-  var nodes = generate_nodes(3, 4);
-  var center = [200, 200];
+  var nodes = generate_nodes(6, 16);
+  var center = [150, 150];
   var dist = 220;
   var locations = node_locations(center, dist, nodes);
-  draw_nodes(mySvg, locations);
+  var picture = get_picture(locations);
+  picture.setAttribute("transform", "translate("+center[0]+","+center[1]+")");
+  mySvg.appendChild(picture);
 }
         </script>
     </head>
