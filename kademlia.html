@@ -115,14 +115,41 @@ function line(c1, c2) {
   return l1;
 }
 
+function get_bucket(nodes, k, node, bucket_number) {
+    var ok = [];
+    var bit = node.charAt(bucket_number);
+    for (var i in nodes) {
+      var candidate = nodes[i];
+      if (candidate.charAt(bucket_number) != bit) {
+        ok.push(candidate);
+      }
+    }
+    return ok;
+}
+
+function get_buckets(nodes, k, node) {
+  var buckets = [];
+  var bits = node.split('');
+  for (var j in bits) {
+    buckets[j] = get_bucket(nodes, k, node, j);
+  }
+  return buckets;
+}
+
 function routing_tables(nodes, k) {
   var connections = {};
   for (var i in nodes) {
     var node = nodes[i];
+    var buckets = get_buckets(nodes, k, node);
+    console.log(node);
+    console.log(buckets);
     var targets = [];
-    for (var j in nodes) {
-      var target = nodes[j];
-      targets.push(target);
+    for (var j in buckets) {
+      var bucket = buckets[j];
+      for (var t in bucket) {
+        var target = bucket[t];
+        targets.push(target);
+      }
     }
     connections[node] = targets;
   }
@@ -226,8 +253,8 @@ window.onload = function() {
    <table><tr>
      <td><div id="svg_area"></div></td>
      <td><table>
-         <tr><td>nodes: <input id="nodes" type="number" min="1" max="32" value="16" /></td></tr>
-         <tr><td>bits: <input id="bits" type="number" min="1" max="7" value="6" /></td></tr>
+         <tr><td>nodes: <input id="nodes" type="number" min="1" max="32" value="8" /></td></tr>
+         <tr><td>bits: <input id="bits" type="number" min="1" max="7" value="3" /></td></tr>
      </table></td>
    </tr></table>
   </body>
