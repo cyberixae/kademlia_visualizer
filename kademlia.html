@@ -13,6 +13,18 @@
 body {
 	font-family: sans-serif;
 }
+table {
+	margin-bottom: 1em;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+th {
+	border: thin solid #999;
+	vertical-align: top;
+}
+td {
+	vertical-align: top;
+}
         </style>
         
         <script>
@@ -235,16 +247,13 @@ function get_bucket_size() {
   return bucket_size;
 }
 
-function refresh() {
+function refresh_image(routing) {
   var container = document.getElementById("image");
   var new_svg = svg_element("svg");
   new_svg.setAttribute("id", "picture");
   new_svg.setAttribute("version", "1.2");
   new_svg.setAttribute("baseProfile", "tiny");
   
-  var bucket_size = get_bucket_size();
-
-  var routing = routing_tables(nodes, bucket_size);
 
   var picture = get_picture(routing);
   new_svg.appendChild(picture);
@@ -254,6 +263,81 @@ function refresh() {
   } else {
     container.replaceChild(new_svg, old_svg);
   }
+}
+
+function get_bucket_td(bucket) {
+    var ul = document.createElement('ul');
+    for (var i in bucket) {
+      var target = bucket[i];
+      var target_name = document.createTextNode(target);
+      var li = document.createElement('li');
+      li.appendChild(target_name);
+      ul.appendChild(li);
+    }
+    var td = document.createElement('td');
+    td.appendChild(ul);
+    return td
+}
+
+function get_node_row(node_id, buckets) {
+  var th = document.createElement('th');
+  var node_name = document.createTextNode(node_id);
+  th.appendChild(node_name);
+  var tr = document.createElement('tr');
+  tr.appendChild(th);
+  for (var i in buckets) {
+    var bucket = buckets[i];
+    var td = get_bucket_td(bucket);
+    tr.appendChild(td);    
+  }
+  return tr;
+}
+
+function get_header_row(routing) {
+  var th = document.createElement('th');
+  var node_name = document.createTextNode('node');
+  th.appendChild(node_name);
+  var tr = document.createElement('tr');
+  tr.appendChild(th);
+
+  for (var node_id in routing) {
+    var buckets = routing[node_id];
+    for (var i in buckets) {
+      var bucket_name = document.createTextNode('bucket' + i);
+      var th = document.createElement('th');
+      th.appendChild(bucket_name);
+      tr.appendChild(th);
+    }
+  return tr;
+  }
+}
+
+function node_table(routing) {
+  var header = get_header_row(routing)
+  var table = document.createElement('table');
+  table.appendChild(header);
+  var node_ids = Object.keys(routing).sort();
+  for (var i in node_ids) {
+    var node_id = node_ids[i];
+    var buckets = routing[node_id];
+    var node_row = get_node_row(node_id, buckets);
+    table.appendChild(node_row);
+  }
+  return table;
+}
+
+function refresh_text(routing) {
+  var old_table = document.getElementById('buckets');
+  var new_table = node_table(routing);
+  new_table.setAttribute('id', 'buckets')
+  old_table.parentNode.replaceChild(new_table, old_table);
+}
+
+function refresh() {
+  var bucket_size = get_bucket_size();
+  var routing = routing_tables(nodes, bucket_size);
+  refresh_image(routing);
+  refresh_text(routing);
 }
 
 function fresh_nodes() {
@@ -279,9 +363,11 @@ window.onload = function() {
      <td><table>
          <tr><td>nodes: <input id="nodes" type="number" min="1" max="32" value="16" /></td></tr>
          <tr><td>bits: <input id="bits" type="number" min="1" max="7" value="5" /></td></tr>
-         <tr><td>bucket size: <input id="bucket_size" type="number" min="0" value="2" /></td></tr>
+         <tr><td>bucket size: <input id="bucket_size" type="number" min="0" value="5" /></td></tr>
      </table></td>
    </tr></table>
+   <table id="buckets">
+   </table>
    <br />
    <hr />
    <p>
