@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>SVG Circles</title>
+        
+        <style>
+            body {
+	font-size: 3em;
+}
+            #svg_area {
+                background-color:#eee;
+                width: 600px;
+                height: 600px;
+            }
+.noodi-20 {
+	color: #f00;
+}
+        </style>
+        
+        <script>
+function svg_element(element_name) {
+  element = document.createElementNS("http://www.w3.org/2000/svg", element_name);
+  return element;
+}
+
+function node(x, y, c, t) {
+  var g1 = svg_element("g");
+  var c1 = svg_element("circle");
+  c1.setAttribute("id", "noodi-" + x);
+  c1.setAttribute("cx", "100");
+  c1.setAttribute("cy", "100");
+  c1.setAttribute("r", "30");
+  c1.setAttribute("stroke", "#000");
+  c1.setAttribute("stroke-width", "2");
+  c1.setAttribute("fill", c);
+  g1.appendChild(c1);
+  
+  var t1 = svg_element("text");
+  var te = document.createTextNode("c"+t);
+  t1.appendChild(te);
+  t1.setAttribute("style", "text-anchor: middle;");
+  t1.setAttribute("dx", "100");
+  t1.setAttribute("dy", "100");
+  g1.appendChild(t1);
+  g1.setAttribute("transform", "translate("+x+","+y+")");
+  return g1;
+}
+
+function node_locations(center, dist, nodes) {
+  var i = 0;
+  var center_x = center[0];
+  var center_y = center[1];
+  var locations = {};
+  for (var id in nodes) {
+    var node = nodes[id];
+    var degrees = i * 2 * Math.PI / nodes.length;
+    var x = center_x + dist * Math.cos(degrees);
+    var y = center_y + dist * Math.sin(degrees);
+    locations[node] = [x, y];
+    i += 1;
+  }
+  return locations;
+}
+
+window.onload = function() {
+  var container = document.getElementById("svg_area");
+  var mySvg = svg_element("svg");
+  mySvg.setAttribute("version", "1.2");
+  mySvg.setAttribute("baseProfile", "tiny");
+  container.appendChild(mySvg);
+  var nodes = ['1','2','3','4','5','6','7','8'];
+  var center = [200, 200];
+  var dist = 220;
+  var locations = node_locations(center, dist, nodes);
+  for (var node_id in locations) {
+    loc = locations[node_id];
+    x = loc[0];
+    y = loc[1];
+    n = node(x, y, '#cde', node_id);
+    mySvg.appendChild(n);
+  }
+  n = node(center[0], center[1], "#ecc", 'root');
+  mySvg.appendChild(n);
+}
+        </script>
+    </head>
+    <body>
+        <div id="svg_area"></div>
+    </body>
+</html>
