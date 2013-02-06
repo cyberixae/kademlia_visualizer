@@ -2,18 +2,15 @@
 
 <html>
     <head>
-        <title>SVG Circles</title>
+        <title>Kademlia Visualizer</title>
         
         <style>
-            body {
-	font-size: 3em;
+#image {
+	background-color: #eee;
+	width: 600px;
+	height: 600px;
 }
-            #svg_area {
-                background-color:#eee;
-                width: 600px;
-                height: 600px;
-            }
-body{
+body {
 	font-family: sans-serif;
 }
         </style>
@@ -251,7 +248,7 @@ function get_bucket_size() {
 }
 
 function refresh() {
-  var container = document.getElementById("svg_area");
+  var container = document.getElementById("image");
   var new_svg = svg_element("svg");
   new_svg.setAttribute("id", "picture");
   new_svg.setAttribute("version", "1.2");
@@ -288,7 +285,7 @@ window.onload = function() {
    <h1>Kademlia Visualizer</h1>
    <p>This web app attempts to visualize topologies used by Kademlia DHT. I hope I got it right.</p>
    <table><tr>
-     <td><div id="svg_area"></div></td>
+     <td id="image"></td>
      <td><table>
          <tr><td>nodes: <input id="nodes" type="number" min="1" max="32" value="8" /></td></tr>
          <tr><td>bits: <input id="bits" type="number" min="1" max="7" value="3" /></td></tr>
