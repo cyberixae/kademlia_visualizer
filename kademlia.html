@@ -168,8 +168,8 @@ function draw_bucket(node, targets, locations, bucket_number) {
     var target = targets[i];
     var loc1 = locations[node]
     var loc2 = locations[target]
-    //var l1 = line(loc1, loc2, 0.20 + 0.20 * (bucket_number + 1))
-    var l1 = line(loc1, loc2, 1)
+    var l1 = line(loc1, loc2, 0.20 + 0.20 * (bucket_number + 1))
+    //var l1 = line(loc1, loc2, 1)
     g1.appendChild(l1);
   }
   return g1;
@@ -274,9 +274,9 @@ window.onload = function() {
    <table><tr>
      <td id="image"></td>
      <td><table>
-         <tr><td>nodes: <input id="nodes" type="number" min="1" max="32" value="8" /></td></tr>
-         <tr><td>bits: <input id="bits" type="number" min="1" max="7" value="3" /></td></tr>
-         <tr><td>bucket size: <input id="bucket_size" type="number" min="0" value="16" /></td></tr>
+         <tr><td>nodes: <input id="nodes" type="number" min="1" max="32" value="16" /></td></tr>
+         <tr><td>bits: <input id="bits" type="number" min="1" max="7" value="4" /></td></tr>
+         <tr><td>bucket size: <input id="bucket_size" type="number" min="0" value="2" /></td></tr>
      </table></td>
    </tr></table>
    <br />
