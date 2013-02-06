@@ -155,8 +155,6 @@ function routing_tables(nodes, bucket_size) {
   for (var i in nodes) {
     var node = nodes[i];
     var buckets = get_buckets(nodes, bucket_size, node);
-    console.log(node);
-    console.log(buckets);
     connections[node] = buckets;
   }
   return connections;
