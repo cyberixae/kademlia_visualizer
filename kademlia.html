@@ -99,7 +99,7 @@ function generate_nodes(id_length, amount) {
   return unique;
 }
 
-function line(c1, c2) {
+function line(c1, c2, stroke) {
   var x1 = c1[0];
   var y1 = c1[1];
   var x2 = c2[0];
@@ -111,7 +111,7 @@ function line(c1, c2) {
   l1.setAttribute("y2", y2);
   l1.setAttribute("y2", y2);
   l1.setAttribute("stroke", "#000");
-  l1.setAttribute("stroke-width", "1");
+  l1.setAttribute("stroke-width", stroke);
   return l1;
 }
 
@@ -184,7 +184,7 @@ function draw_bucket(node, targets, locations, bucket_number) {
     var g1 = svg_element("g");
     var loc1 = locations[node]
     var loc2 = locations[target]
-    var l1 = line(loc1, loc2)
+    var l1 = line(loc1, loc2, 0.20 + 0.20 * (bucket_number + 1))
     g1.appendChild(l1);
   }
   return g1;
