@@ -127,7 +127,7 @@ function candidate_ok(candidate, node, bucket_number) {
   return true;
 }
 
-function get_bucket(nodes, k, node, bucket_number) {
+function get_bucket(nodes, bucket_size, node, bucket_number) {
   var ok = [];
   for (var i in nodes) {
     var candidate = nodes[i];
@@ -136,7 +136,7 @@ function get_bucket(nodes, k, node, bucket_number) {
       ok.push(candidate);
     }
   }
-  while (ok.length > k) {
+  while (ok.length > bucket_size) {
     var random_index = Math.floor(Math.random() * ok.length);
     ok.splice(random_index, 1);
   }
@@ -144,20 +144,20 @@ function get_bucket(nodes, k, node, bucket_number) {
   return ok;
 }
 
-function get_buckets(nodes, k, node) {
+function get_buckets(nodes, bucket_size, node) {
   var buckets = [];
   var bits = node.split('');
   for (var j in bits) {
-    buckets[j] = get_bucket(nodes, k, node, j);
+    buckets[j] = get_bucket(nodes, bucket_size, node, j);
   }
   return buckets;
 }
 
-function routing_tables(nodes, k) {
+function routing_tables(nodes, bucket_size) {
   var connections = {};
   for (var i in nodes) {
     var node = nodes[i];
-    var buckets = get_buckets(nodes, k, node);
+    var buckets = get_buckets(nodes, bucket_size, node);
     var targets = [];
     for (var j in buckets) {
       var bucket = buckets[j];
@@ -234,6 +234,12 @@ function get_bit_count(nodes) {
   return bit_count;
 }
 
+function get_bucket_size() {
+  var element = document.getElementById('bucket_size');
+  var bucket_size = element.value;
+  return bucket_size;
+}
+
 function refresh() {
   var container = document.getElementById("svg_area");
   var new_svg = svg_element("svg");
@@ -243,10 +249,11 @@ function refresh() {
   
   var node_count = get_node_count();
   var bit_count = get_bit_count(node_count);
+  var bucket_size = get_bucket_size();
   
   var nodes = generate_nodes(bit_count, node_count);
 
-  var routing = routing_tables(nodes, 1);
+  var routing = routing_tables(nodes, bucket_size);
   //var routing = fully(nodes);
 
   var picture = get_picture(routing);
@@ -260,8 +267,9 @@ function refresh() {
 }
 
 window.onload = function() {
-  document.getElementById('bits').addEventListener('change', refresh, false);
   document.getElementById('nodes').addEventListener('change', refresh, false);
+  document.getElementById('bits').addEventListener('change', refresh, false);
+  document.getElementById('bucket_size').addEventListener('change', refresh, false);
   refresh();
 }
         </script>
@@ -272,6 +280,7 @@ window.onload = function() {
      <td><table>
          <tr><td>nodes: <input id="nodes" type="number" min="1" max="32" value="8" /></td></tr>
          <tr><td>bits: <input id="bits" type="number" min="1" max="7" value="3" /></td></tr>
+         <tr><td>bucket size: <input id="bucket_size" type="number" min="0" value="1" /></td></tr>
      </table></td>
    </tr></table>
   </body>
