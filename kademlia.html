@@ -63,7 +63,7 @@ function node_locations(center, dist, nodes) {
   return locations;
 }
 
-function draw_nodes(locations) {
+function draw_nodes(locations) {
   var g1 = svg_element("g");
   for (var node_id in locations) {
     loc = locations[node_id];
@@ -79,7 +79,7 @@ function random_id(id_length) {
   id = '';
   for (var i = 0; i < id_length; i++) {
     id += Math.floor(Math.random() * 2)
-  }
+  }
   return id;
 }
 
@@ -110,7 +110,7 @@ function line(c1, c2) {
   return l1;
 }
 
-function fully(locations) {
+function fully(locations) {
   var g1 = svg_element("g");
   for (var i in locations) {
     loc1 = locations[i];
@@ -132,23 +132,55 @@ function get_picture(locations) {
   return g1;
 }
 
-window.onload = function() {
+function get_node_count() {
+  var MAX_NODES = 32;
+  var element = document.getElementById('nodes');
+  var node_count = element.value;
+  if (node_count > MAX_NODES) {
+    return MAX_NODES;
+  }
+  return node_count;
+}
+
+function refresh() {
   var container = document.getElementById("svg_area");
-  var mySvg = svg_element("svg");
-  mySvg.setAttribute("version", "1.2");
-  mySvg.setAttribute("baseProfile", "tiny");
-  container.appendChild(mySvg);
-  var nodes = generate_nodes(6, 16);
+  var new_svg = svg_element("svg");
+  new_svg.setAttribute("id", "picture");
+  new_svg.setAttribute("version", "1.2");
+  new_svg.setAttribute("baseProfile", "tiny");
+  
+  var node_count = get_node_count();
+  
+  var nodes = generate_nodes(6, node_count);
   var center = [150, 150];
   var dist = 220;
   var locations = node_locations(center, dist, nodes);
   var picture = get_picture(locations);
   picture.setAttribute("transform", "translate("+center[0]+","+center[1]+")");
-  mySvg.appendChild(picture);
+  new_svg.appendChild(picture);
+  var old_svg = document.getElementById('picture');
+  if (old_svg == null) {
+    container.appendChild(new_svg);
+  } else {
+    container.replaceChild(new_svg, old_svg);
+  }
+}
+
+window.onload = function() {
+  refresh();
 }
         </script>
-    </head>
-    <body>
-        <div id="svg_area"></div>
-    </body>
+ </head>
+ <body>
+   <table>
+     <tr>
+       <td>
+       <div id="svg_area"></div>
+       </td>
+       <td>
+         <input id="nodes" type="number" min="1" max="32" value="16" onChange="refresh();" />
+       </td>
+     </tr>
+    </table>
+  </body>
 </html>
