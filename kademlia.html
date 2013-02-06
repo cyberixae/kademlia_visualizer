@@ -13,8 +13,8 @@
                 width: 600px;
                 height: 600px;
             }
-.noodi-20 {
-	color: #f00;
+body{
+	font-family: sans-serif;
 }
         </style>
         
@@ -285,6 +285,8 @@ window.onload = function() {
         </script>
  </head>
  <body>
+   <h1>Kademlia Visualizer</h1>
+   <p>This web app attempts to visualize topologies used by Kademlia DHT. I hope I got it right.</p>
    <table><tr>
      <td><div id="svg_area"></div></td>
      <td><table>
@@ -293,5 +295,10 @@ window.onload = function() {
          <tr><td>bucket size: <input id="bucket_size" type="number" min="0" value="1" /></td></tr>
      </table></td>
    </tr></table>
+   <br />
+   <hr />
+   <p>
+Made by <a href="http://iki.fi/toni.ruottu/">Toni Ruottu</a> in 2013.
+   </p>
   </body>
 </html>
