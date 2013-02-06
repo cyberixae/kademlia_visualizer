@@ -115,16 +115,33 @@ function line(c1, c2) {
   return l1;
 }
 
-function get_bucket(nodes, k, node, bucket_number) {
-    var ok = [];
-    var bit = node.charAt(bucket_number);
-    for (var i in nodes) {
-      var candidate = nodes[i];
-      if (candidate.charAt(bucket_number) != bit) {
-        ok.push(candidate);
-      }
+function candidate_ok(candidate, node, bucket_number) {
+  if (candidate.charAt(bucket_number) == node.charAt(bucket_number)) {
+    return false;
+  }
+  for (var i = 0; i < bucket_number; i++) {
+    if (candidate.charAt(i) != node.charAt(i)) {
+      return false;
     }
-    return ok;
+  }
+  return true;
+}
+
+function get_bucket(nodes, k, node, bucket_number) {
+  var ok = [];
+  for (var i in nodes) {
+    var candidate = nodes[i];
+    var is_ok = candidate_ok(candidate, node, bucket_number);
+    if (is_ok) {
+      ok.push(candidate);
+    }
+  }
+  while (ok.length > k) {
+    var random_index = Math.floor(Math.random() * ok.length);
+    ok.splice(random_index, 1);
+  }
+
+  return ok;
 }
 
 function get_buckets(nodes, k, node) {
@@ -141,8 +158,6 @@ function routing_tables(nodes, k) {
   for (var i in nodes) {
     var node = nodes[i];
     var buckets = get_buckets(nodes, k, node);
-    console.log(node);
-    console.log(buckets);
     var targets = [];
     for (var j in buckets) {
       var bucket = buckets[j];
