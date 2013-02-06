@@ -200,15 +200,17 @@ function draw_lines(connections, locations) {
   return g1;
 }
 
-function get_picture(locations) {
+function get_picture(routing) {
+  var center = [150, 150];
+  var dist = 220;
   var g1 = svg_element("g");
-  var nodes = Object.keys(locations);
-  var routing = routing_tables(nodes, 1);
-  //var routing = fully(nodes);
+  var nodes = Object.keys(routing);
+  var locations = node_locations(center, dist, nodes);
   var lines = draw_lines(routing, locations);
   var nodes = draw_nodes(locations);
   g1.appendChild(lines);
   g1.appendChild(nodes);
+  g1.setAttribute("transform", "translate("+center[0]+","+center[1]+")");
   return g1;
 }
 
@@ -243,11 +245,11 @@ function refresh() {
   var bit_count = get_bit_count(node_count);
   
   var nodes = generate_nodes(bit_count, node_count);
-  var center = [150, 150];
-  var dist = 220;
-  var locations = node_locations(center, dist, nodes);
-  var picture = get_picture(locations);
-  picture.setAttribute("transform", "translate("+center[0]+","+center[1]+")");
+
+  var routing = routing_tables(nodes, 1);
+  //var routing = fully(nodes);
+
+  var picture = get_picture(routing);
   new_svg.appendChild(picture);
   var old_svg = document.getElementById('picture');
   if (old_svg == null) {
