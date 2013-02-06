@@ -18,6 +18,8 @@ body {
         <script>
 "use strict";
 
+var nodes;
+
 function svg_element(element_name) {
   var element = document.createElementNS("http://www.w3.org/2000/svg", element_name);
   return element;
@@ -240,11 +242,7 @@ function refresh() {
   new_svg.setAttribute("version", "1.2");
   new_svg.setAttribute("baseProfile", "tiny");
   
-  var node_count = get_node_count();
-  var bit_count = get_bit_count(node_count);
   var bucket_size = get_bucket_size();
-  
-  var nodes = generate_nodes(bit_count, node_count);
 
   var routing = routing_tables(nodes, bucket_size);
 
@@ -258,11 +256,18 @@ function refresh() {
   }
 }
 
-window.onload = function() {
-  document.getElementById('nodes').addEventListener('change', refresh, false);
-  document.getElementById('bits').addEventListener('change', refresh, false);
-  document.getElementById('bucket_size').addEventListener('change', refresh, false);
+function fresh_nodes() {
+  var node_count = get_node_count();
+  var bit_count = get_bit_count(node_count);
+  nodes = generate_nodes(bit_count, node_count);
   refresh();
+}
+
+window.onload = function() {
+  document.getElementById('nodes').addEventListener('change', fresh_nodes, false);
+  document.getElementById('bits').addEventListener('change', fresh_nodes, false);
+  document.getElementById('bucket_size').addEventListener('change', refresh, false);
+  fresh_nodes();
 }
         </script>
  </head>
