@@ -197,7 +197,7 @@ function get_picture(routing) {
   var center = [150, 150];
   var dist = 220;
   var g1 = svg_element("g");
-  var nodes = Object.keys(routing);
+  var nodes = Object.keys(routing).sort();
   var locations = node_locations(center, dist, nodes);
   var lines = draw_connections(routing, locations);
   var nodes = draw_nodes(locations);
