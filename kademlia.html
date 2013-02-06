@@ -63,25 +63,47 @@ function node_locations(center, dist, nodes) {
   return locations;
 }
 
+function draw_nodes(svg, locations) {
+  for (var node_id in locations) {
+    loc = locations[node_id];
+    x = loc[0];
+    y = loc[1];
+    n = node(x, y, '#cde', node_id);
+    svg.appendChild(n);
+  }
+
+}
+
+function random_id(id_length) {
+  id = '';
+  for (var i = 0; i < id_length; i++) {
+    id += Math.floor(Math.random() * 2)
+  }
+  return id;
+}
+
+function generate_nodes(id_length, amount) {
+  var ids = {};
+  var unique = [];
+  while (unique.length < amount) {
+    id = random_id(id_length);
+    ids[id] = null;
+    unique = Object.keys(ids);
+  }
+  return unique;
+}
+
 window.onload = function() {
   var container = document.getElementById("svg_area");
   var mySvg = svg_element("svg");
   mySvg.setAttribute("version", "1.2");
   mySvg.setAttribute("baseProfile", "tiny");
   container.appendChild(mySvg);
-  var nodes = ['1','2','3','4','5','6','7','8'];
+  var nodes = generate_nodes(3, 4);
   var center = [200, 200];
   var dist = 220;
   var locations = node_locations(center, dist, nodes);
-  for (var node_id in locations) {
-    loc = locations[node_id];
-    x = loc[0];
-    y = loc[1];
-    n = node(x, y, '#cde', node_id);
-    mySvg.appendChild(n);
-  }
-  n = node(center[0], center[1], "#ecc", 'root');
-  mySvg.appendChild(n);
+  draw_nodes(mySvg, locations);
 }
         </script>
     </head>
