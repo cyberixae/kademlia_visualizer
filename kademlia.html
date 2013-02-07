@@ -25,6 +25,10 @@ th {
 td {
 	vertical-align: top;
 }
+#error {
+	font-weight: bold;
+	color: #f00;
+}
         </style>
         
         <script>
@@ -314,8 +318,11 @@ function get_header_row(routing) {
 }
 
 function node_table(routing) {
-  var header = get_header_row(routing)
   var table = document.createElement('table');
+  if (Object.keys(routing).length < 1) {
+    return table;
+  }
+  var header = get_header_row(routing)
   table.appendChild(header);
   var node_ids = Object.keys(routing).sort();
   for (var i in node_ids) {
@@ -334,11 +341,55 @@ function refresh_text(routing) {
   old_table.parentNode.replaceChild(new_table, old_table);
 }
 
+function math_element(element_name, text) {
+  var element = document.createElementNS("http://www.w3.org/1998/Math/MathML", element_name);
+  if (typeof(text) != typeof(undefined)) {
+    var text_node = document.createTextNode(text);
+    element.appendChild(text_node);
+  }
+  return element;
+}
+
+function node_count_rule(node_count, bit_count) {
+  var two = math_element('mn', 2);
+  var bits = math_element('mn', bit_count);
+  var space = math_element('msup');
+  space.appendChild(two);
+  space.appendChild(bits);
+  var nodes = math_element('mn', node_count);
+  var operator = math_element('mo', '>');
+  var row = math_element('mrow');
+  row.appendChild(nodes);
+  row.appendChild(operator);
+  row.appendChild(space);
+  var math = math_element('math');
+  math.appendChild(row);
+  var error_text = document.createTextNode('error: ');
+  var error = document.createElement('span');
+  error.appendChild(error_text);
+  error.appendChild(math);
+  return error;
+}
+
+function refresh_errors() {
+  var old_error = document.getElementById('error');
+  var new_error = document.createElement('td');
+  new_error.setAttribute('id','error');
+  var node_count = get_node_count();
+  var bit_count = get_bit_count(node_count);
+  if (node_count > Math.pow(2, bit_count)) {
+    var error_message = node_count_rule(node_count, bit_count);
+    new_error.appendChild(error_message);
+  }
+  old_error.parentNode.replaceChild(new_error, old_error);
+}
+
 function refresh() {
   var bucket_size = get_bucket_size();
   var routing = routing_tables(nodes, bucket_size);
   refresh_image(routing);
   refresh_text(routing);
+  refresh_errors();
 }
 
 function fresh_nodes() {
@@ -365,6 +416,7 @@ window.onload = function() {
          <tr><td>nodes: <input id="nodes" type="number" min="1" max="32" value="16" /></td></tr>
          <tr><td>bits: <input id="bits" type="number" min="1" max="7" value="5" /></td></tr>
          <tr><td>bucket size: <input id="bucket_size" type="number" min="0" value="5" /></td></tr>
+         <tr><td id="error"></td></tr>
      </table></td>
    </tr></table>
    <table id="buckets">
