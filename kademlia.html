@@ -25,6 +25,10 @@ th {
 td {
 	vertical-align: top;
 }
+p {
+	width: 600px;
+	text-align: justify;
+}
 #space_error {
 	font-weight: bold;
 	color: #f00;
@@ -416,7 +420,7 @@ window.onload = function() {
  </head>
  <body>
    <h1>Kademlia Visualizer</h1>
-   <p>This web app attempts to visualize topologies used by Kademlia DHT. I hope I got it right.</p>
+   <p>This web app attempts to visualize topologies used by Kademlia DHT.</p>
    <table><tr>
      <td id="image"></td>
      <td><table>
@@ -427,12 +431,29 @@ window.onload = function() {
          <tr><td>bucket size: <input id="bucket_size" type="number" min="0" value="5" /></td></tr>
      </table></td>
    </tr></table>
+   <p>
+   The amount of buckets is determined based on the amount of bits available in the node identifiers (
+   <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <mrow>
+        <mi>x</mi>
+        <mo rspace='thickmathspace'>&InvisibleTimes;</mo>
+        <mi mathvariant='normal' class='MathML-Unit'>bits</mi>
+        <mo>=</mo>
+        <mi>x</mi>
+        <mo rspace='thickmathspace'>&InvisibleTimes;</mo>
+        <mi mathvariant='normal' class='MathML-Unit'> k-buckets</mi>
+      </mrow>
+    </math>
+
+). Each node estimates the distances of all other nodes and places them into these buckets accordingly. The <em>bucketsize</em> limits the amount of nodes each bucket can contain.
+
+</p>
    <table id="buckets">
    </table>
    <br />
    <hr />
    <p>
-Made by <a href="http://iki.fi/toni.ruottu/">Toni Ruottu</a> in 2013.
+Made by <a href="http://iki.fi/toni.ruottu/">Toni Ruottu</a> in 2013. Send bug reports to <a href="mailto:toni.ruottu@iki.fi">toni.ruottu@iki.fi</a>.
    </p>
   </body>
 </html>
