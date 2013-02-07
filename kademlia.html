@@ -71,7 +71,8 @@ function node_locations(center, dist, nodes) {
   var locations = {};
   for (var id in nodes) {
     var node = nodes[id];
-    var degrees = i * 2 * Math.PI / nodes.length;
+    var offset = (3/4) * nodes.length;
+    var degrees = (i + offset) * 2 * Math.PI / nodes.length;
     var x = center_x + dist * Math.cos(degrees);
     var y = center_y + dist * Math.sin(degrees);
     locations[node] = [x, y];
